@@ -28,8 +28,8 @@ public class PlaceObjectOnPlane : MonoBehaviour
             Pose hitPose = hits[0].pose;
             Debug.Log("Plane hit at: " + hitPose.position);
 
-            GameObject newObject = Instantiate(placedPrefab, hitPose.position, hitPose.rotation);
-            Debug.Log("New object spawned at: " + hitPose.position);
+            Vector3 stackPos = StackableObject.GetNextStackPosition(hitPose.position);
+            GameObject newObject = Instantiate(placedPrefab, stackPos, hitPose.rotation);
 
         }
         else
