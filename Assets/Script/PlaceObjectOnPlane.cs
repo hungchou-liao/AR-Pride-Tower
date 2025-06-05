@@ -28,15 +28,9 @@ public class PlaceObjectOnPlane : MonoBehaviour
             Pose hitPose = hits[0].pose;
             Debug.Log("Plane hit at: " + hitPose.position);
 
-            if (spawnedObject == null)
-            {
-                spawnedObject = Instantiate(placedPrefab, hitPose.position, hitPose.rotation);
-                Debug.Log("Object spawned.");
-            }
-            else
-            {
-                spawnedObject.transform.SetPositionAndRotation(hitPose.position, hitPose.rotation);
-            }
+            GameObject newObject = Instantiate(placedPrefab, hitPose.position, hitPose.rotation);
+            Debug.Log("New object spawned at: " + hitPose.position);
+
         }
         else
         {
