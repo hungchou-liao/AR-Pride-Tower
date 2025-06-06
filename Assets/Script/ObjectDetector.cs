@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ObjectDetector : MonoBehaviour
 {
-    public float detectionDistance = 0.3f; // how close the camera needs to be
+    public float detectionDistance = 0.02f; // how close the camera needs to be
     public Material highlightMaterial;
     private Material originalMaterial;
     private Renderer objRenderer;

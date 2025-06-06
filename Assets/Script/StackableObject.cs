@@ -8,7 +8,7 @@ public class StackableObject : MonoBehaviour
 
     public static Vector3 GetNextStackPosition(Vector3 basePosition)
     {
-        Collider[] colliders = Physics.OverlapSphere(basePosition, 0.05f);
+        Collider[] colliders = Physics.OverlapSphere(basePosition, 2.0f);
         float maxY = basePosition.y;
 
         foreach (var col in colliders)
