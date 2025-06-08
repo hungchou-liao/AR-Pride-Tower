@@ -27,7 +27,11 @@ public class PlaceObjectOnPlane : MonoBehaviour
     {
         if (!allowPlacement) return;
 
-        if (EventSystem.current.IsPointerOverGameObject()) return;
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            Debug.Log("UI was tapped, ignoring placement.");
+            return;
+        }
 
         if (Time.time - lastPlaceTime < placementCooldown)
         {

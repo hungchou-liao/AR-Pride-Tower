@@ -28,9 +28,8 @@ public class ObjectGrabber : MonoBehaviour
                 originalScale = heldObject.transform.localScale;
 
                 heldObject.transform.SetParent(arCamera);
-                heldObject.transform.localPosition = new Vector3(0, 0, 0.5f);
+                heldObject.transform.localPosition = heldObject.transform.localPosition; // keep current world position
                 heldObject.transform.localRotation = Quaternion.identity;
-                heldObject.transform.localScale = originalScale;
 
                 var rb = heldObject.GetComponent<Rigidbody>();
                 if (rb != null)
