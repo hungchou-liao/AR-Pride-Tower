@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 64072821}
   - component: {fileID: 64072820}
   - component: {fileID: 64072819}
+  - component: {fileID: 64072822}
   m_Layer: 5
   m_Name: Exit
   m_TagString: Untagged
@@ -242,6 +243,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 64072817}
   m_CullTransparentMesh: 1
+--- !u!114 &64072822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 64072817}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a99a5bb017e448ea951a9f2b124c927, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &102565275
 GameObject:
   m_ObjectHideFlags: 0
@@ -392,6 +405,7 @@ GameObject:
   - component: {fileID: 205223357}
   - component: {fileID: 205223364}
   - component: {fileID: 205223363}
+  - component: {fileID: 205223365}
   m_Layer: 0
   m_Name: XR Origin (XR Rig)
   m_TagString: Untagged
@@ -502,6 +516,8 @@ MonoBehaviour:
   placedPrefab: {fileID: 1167118527451408757, guid: 9ac21ce2514b74be7ac619d3050b43ec,
     type: 3}
   allowPlacement: 1
+  objectGrabber: {fileID: 0}
+  uiCanvas: {fileID: 0}
   placementCooldown: 1
 --- !u!114 &205223364
 MonoBehaviour:
@@ -550,6 +566,18 @@ MonoBehaviour:
   m_DefaultActionMap: AR Touch Action
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &205223365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 205223356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b43227a0391c4025b992d9717c11280, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &362657566
 GameObject:
   m_ObjectHideFlags: 0
@@ -582,6 +610,9 @@ MonoBehaviour:
   grabber: {fileID: 424244821}
   grabButton: {fileID: 1538078189}
   dropButton: {fileID: 1984852192}
+  exitButton: {fileID: 0}
+  downloadButton: {fileID: 0}
+  resetButton: {fileID: 0}
 --- !u!4 &362657568
 Transform:
   m_ObjectHideFlags: 0
@@ -628,6 +659,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetTag: PlacedObject
   grabDistance: 0.3
+  grabRadius: 0.05
 --- !u!4 &424244822
 Transform:
   m_ObjectHideFlags: 0
@@ -1063,6 +1095,7 @@ GameObject:
   - component: {fileID: 1848991223}
   - component: {fileID: 1848991222}
   - component: {fileID: 1848991221}
+  - component: {fileID: 1848991224}
   m_Layer: 5
   m_Name: Reset
   m_TagString: Untagged
@@ -1171,6 +1204,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1848991219}
   m_CullTransparentMesh: 1
+--- !u!114 &1848991224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1848991219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fb891a5295974f7fbb561fcf7a0458c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1860201761
 GameObject:
   m_ObjectHideFlags: 0
@@ -1183,6 +1228,7 @@ GameObject:
   - component: {fileID: 1860201765}
   - component: {fileID: 1860201764}
   - component: {fileID: 1860201763}
+  - component: {fileID: 1860201766}
   m_Layer: 5
   m_Name: Download
   m_TagString: Untagged
@@ -1303,6 +1349,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1860201761}
   m_CullTransparentMesh: 1
+--- !u!114 &1860201766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1860201761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac1a9ebdc6e46462c92186c33fa1cec4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1877441223
 GameObject:
   m_ObjectHideFlags: 0

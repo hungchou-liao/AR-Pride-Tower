@@ -5,8 +5,8 @@ using UnityEngine;
 public class ObjectGrabber : MonoBehaviour
 {
     public string targetTag = "PlacedObject";
-    public float grabDistance = 0.15f; // Very short grab distance
-    public float grabRadius = 0.05f; // Very small grab radius
+    public float grabDistance = 0.5f; // Increased from 0.15f to 0.5f
+    public float grabRadius = 0.1f; // Increased from 0.05f to 0.1f
     private Transform arCamera;
     private GameObject heldObject;
     private Vector3 originalScale;
@@ -89,6 +89,12 @@ public class ObjectGrabber : MonoBehaviour
                 rb.useGravity = false;
                 rb.isKinematic = true;
             }
+
+            Debug.Log($"Grabbed object: {heldObject.name} at distance: {closestDistance:F2}m");
+        }
+        else
+        {
+            Debug.Log("No object found within grab range");
         }
 
         // If no object was grabbed, re-enable placement
@@ -118,6 +124,7 @@ public class ObjectGrabber : MonoBehaviour
             rb.isKinematic = false;
         }
 
+        Debug.Log($"Dropped object: {heldObject.name}");
         heldObject = null;
     }
 

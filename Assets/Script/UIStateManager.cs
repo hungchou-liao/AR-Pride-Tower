@@ -2,19 +2,50 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class UIStateManager : MonoBehaviour
 {
+    [Header("Object Manipulation")]
     public ObjectGrabber grabber;
     public GameObject grabButton;
     public GameObject dropButton;
+
+    [Header("Additional UI Controls")]
+    [SerializeField] private Button exitButton;
+    [SerializeField] private Button downloadButton;
+    [SerializeField] private Button resetButton;
+
     private PlaceObjectOnPlane placeObjectScript;
+    private ScreenshotManager screenshotManager;
+    private ResetManager resetManager;
 
     void Start()
     {
+        // Find PlaceObjectOnPlane script
         if (placeObjectScript == null)
         {
             placeObjectScript = FindObjectOfType<PlaceObjectOnPlane>();
+        }
+
+        // Get or add required components
+        screenshotManager = gameObject.GetComponent<ScreenshotManager>() ?? gameObject.AddComponent<ScreenshotManager>();
+        resetManager = gameObject.GetComponent<ResetManager>() ?? gameObject.AddComponent<ResetManager>();
+
+        // Set up additional button listeners
+        if (exitButton != null)
+        {
+            exitButton.onClick.AddListener(ExitApplication);
+        }
+
+        if (downloadButton != null)
+        {
+            downloadButton.onClick.AddListener(() => screenshotManager.CaptureAndSaveScreenshot());
+        }
+
+        if (resetButton != null)
+        {
+            resetButton.onClick.AddListener(() => resetManager.ResetScene());
         }
     }
 
@@ -72,5 +103,27 @@ public class UIStateManager : MonoBehaviour
         {
             placeObjectScript.allowPlacement = true;
         }
+    }
+
+    private void ExitApplication()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
+    }
+
+    void OnDestroy()
+    {
+        // Clean up listeners
+        if (exitButton != null)
+            exitButton.onClick.RemoveListener(ExitApplication);
+
+        if (downloadButton != null)
+            downloadButton.onClick.RemoveAllListeners();
+
+        if (resetButton != null)
+            resetButton.onClick.RemoveAllListeners();
     }
 }

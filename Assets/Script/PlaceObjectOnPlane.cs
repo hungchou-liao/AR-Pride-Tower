@@ -8,7 +8,7 @@ using UnityEngine.EventSystems;
 
 public class PlaceObjectOnPlane : MonoBehaviour
 {
-    [SerializeField] GameObject placedPrefab;
+    [SerializeField] GameObject[] prefabs; // Array of prefabs to choose from
     GameObject spawnedObject;
     public bool allowPlacement = true;
 
@@ -24,6 +24,9 @@ public class PlaceObjectOnPlane : MonoBehaviour
 
     // Define the bottom screen dead zone (1/6 of screen height)
     private float deadZoneHeight;
+
+    // Track the current index in the sequence
+    private int currentPrefabIndex = 0;
 
     private void Start()
     {
@@ -49,6 +52,32 @@ public class PlaceObjectOnPlane : MonoBehaviour
 
         // Calculate the dead zone height (1/6 of screen height)
         deadZoneHeight = Screen.height / 6f;
+
+        // Load all prefabs from the Prefab folder
+        LoadPrefabs();
+    }
+
+    private void LoadPrefabs()
+    {
+        // Load all prefabs from the Prefab folder
+        prefabs = Resources.LoadAll<GameObject>("Prefabs");
+
+        if (prefabs == null || prefabs.Length == 0)
+        {
+            Debug.LogError("No prefabs found in the Prefab folder!");
+            return;
+        }
+
+        // Sort prefabs in the desired order: P > R > I > D > E > 25 > Heart
+        System.Array.Sort(prefabs, (a, b) =>
+        {
+            string[] order = { "P", "R", "I", "D", "E", "25", "Heart" };
+            int indexA = System.Array.IndexOf(order, a.name);
+            int indexB = System.Array.IndexOf(order, b.name);
+            return indexA.CompareTo(indexB);
+        });
+
+        Debug.Log($"Loaded {prefabs.Length} prefabs in order: {string.Join(", ", System.Array.ConvertAll(prefabs, p => p.name))}");
     }
 
     void Update()
@@ -103,8 +132,22 @@ public class PlaceObjectOnPlane : MonoBehaviour
             Debug.Log("Plane hit at: " + hitPose.position);
 
             Vector3 stackPos = StackableObject.GetNextStackPosition(hitPose.position);
-            GameObject newObject = Instantiate(placedPrefab, stackPos, hitPose.rotation);
-            lastPlaceTime = Time.time;
+
+            // Place the next object in sequence
+            if (prefabs != null && prefabs.Length > 0)
+            {
+                GameObject selectedPrefab = prefabs[currentPrefabIndex];
+                GameObject newObject = Instantiate(selectedPrefab, stackPos, hitPose.rotation);
+                lastPlaceTime = Time.time;
+                Debug.Log($"Placed prefab: {selectedPrefab.name}");
+
+                // Move to next prefab in sequence
+                currentPrefabIndex = (currentPrefabIndex + 1) % prefabs.Length;
+            }
+            else
+            {
+                Debug.LogError("No prefabs available to place!");
+            }
         }
         else
         {
