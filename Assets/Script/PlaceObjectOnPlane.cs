@@ -74,13 +74,39 @@ public class PlaceObjectOnPlane : MonoBehaviour
             Debug.Log("Added AudioSource component to " + gameObject.name);
         }
 
+        // Check audio system
+        if (AudioListener.pause)
+        {
+            Debug.LogWarning("Audio system is paused! Check AudioListener settings.");
+        }
+
+        // Check audio source settings
+        if (audioSource != null)
+        {
+            Debug.Log($"AudioSource settings on {gameObject.name}:");
+            Debug.Log($"- Mute: {audioSource.mute}");
+            Debug.Log($"- Volume: {audioSource.volume}");
+            Debug.Log($"- Play On Awake: {audioSource.playOnAwake}");
+            Debug.Log($"- Spatial Blend: {audioSource.spatialBlend}");
+        }
+
         if (placeSound == null)
         {
             Debug.LogError("Place sound effect is not assigned in the inspector!");
         }
         else
         {
-            Debug.Log("Place sound effect is properly assigned: " + placeSound.name);
+            Debug.Log($"Place sound effect is properly assigned: {placeSound.name}");
+            Debug.Log($"- Load Type: {placeSound.loadType}");
+            Debug.Log($"- Load State: {placeSound.loadState}");
+            Debug.Log($"- Length: {placeSound.length} seconds");
+        }
+
+        // Test audio system
+        if (audioSource != null && placeSound != null)
+        {
+            Debug.Log("Testing audio system...");
+            audioSource.PlayOneShot(placeSound);
         }
     }
 
@@ -181,8 +207,13 @@ public class PlaceObjectOnPlane : MonoBehaviour
                 // Play sound effect
                 if (placeSound != null && audioSource != null)
                 {
+                    Debug.Log($"Attempting to play sound: {placeSound.name}");
+                    Debug.Log($"- AudioSource enabled: {audioSource.enabled}");
+                    Debug.Log($"- AudioSource playing: {audioSource.isPlaying}");
+                    Debug.Log($"- AudioListener enabled: {AudioListener.pause == false}");
+
                     audioSource.PlayOneShot(placeSound);
-                    Debug.Log("Playing place sound effect");
+                    Debug.Log("PlayOneShot called");
                 }
                 else
                 {

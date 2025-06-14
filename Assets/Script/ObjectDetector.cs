@@ -25,20 +25,40 @@ public class ObjectDetector : MonoBehaviour
         if (objRenderer != null)
         {
             originalMaterial = objRenderer.material;
+            Debug.Log($"[{gameObject.name}] Renderer found with material: {originalMaterial.name}");
         }
         else
         {
-            Debug.LogError($"ObjectDetector on {gameObject.name}: No Renderer component found!");
+            Debug.LogError($"[{gameObject.name}] No Renderer component found!");
         }
 
         if (highlightMaterial == null)
         {
-            Debug.LogError($"ObjectDetector on {gameObject.name}: Highlight Material is not assigned!");
+            Debug.LogError($"[{gameObject.name}] Highlight Material is not assigned!");
+        }
+        else
+        {
+            Debug.Log($"[{gameObject.name}] Highlight material assigned: {highlightMaterial.name}");
         }
 
         if (!gameObject.CompareTag("PlacedObject"))
         {
-            Debug.LogError($"ObjectDetector on {gameObject.name}: Object does not have 'PlacedObject' tag!");
+            Debug.LogError($"[{gameObject.name}] Object does not have 'PlacedObject' tag!");
+        }
+        else
+        {
+            Debug.Log($"[{gameObject.name}] Has correct 'PlacedObject' tag");
+        }
+
+        // Check for collider
+        Collider col = GetComponent<Collider>();
+        if (col == null)
+        {
+            Debug.LogError($"[{gameObject.name}] No Collider component found!");
+        }
+        else
+        {
+            Debug.Log($"[{gameObject.name}] Has collider: {col.GetType().Name}");
         }
 
         deadZoneHeight = Screen.height / 6f;
@@ -79,8 +99,12 @@ public class ObjectDetector : MonoBehaviour
                 minDistance = distance;
                 closestObject = gameObject;
                 isObjectInView = true;
-                Debug.Log($"Detected object: {gameObject.name} at distance: {distance}");
+                Debug.Log($"[{gameObject.name}] Detected at distance: {distance:F2}, screen position: {screenPoint}");
             }
+        }
+        else if (distance <= detectionDistance)
+        {
+            Debug.Log($"[{gameObject.name}] In range but not closest. Distance: {distance:F2}, In dead zone: {inDeadZone}");
         }
 
         if (objRenderer != null)

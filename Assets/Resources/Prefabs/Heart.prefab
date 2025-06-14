@@ -186,8 +186,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.53, y: 0.04, z: 0.45}
-  m_Center: {x: -0.32, y: 0.02, z: -0.3}
+  m_Size: {x: 0.57, y: 0.06, z: 0.45}
+  m_Center: {x: -0.32, y: 0, z: -0.3}
 --- !u!54 &8039563175123378955
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -239,8 +239,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e72d8be26d1a4116b93cf11edbbd382, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectionDistance: 0.08
-  highlightMaterial: {fileID: 0}
+  detectionDistance: 0.5
+  highlightMaterial: {fileID: 2100000, guid: a382639110fd348dbb76c502c0329db6, type: 2}
 --- !u!1001 &9161528760287386275
 PrefabInstance:
   m_ObjectHideFlags: 0
