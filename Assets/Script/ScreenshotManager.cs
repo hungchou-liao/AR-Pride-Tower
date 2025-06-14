@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro; // Add TextMeshPro namespace
 using System;
 using System.IO;
 using System.Collections;
@@ -7,6 +8,8 @@ using System.Collections;
 public class ScreenshotManager : MonoBehaviour
 {
     private Button downloadButton;
+    [SerializeField] private TMP_Text successMessageText; // Changed from Text to TMP_Text
+    private float messageDisplayTime = 2f; // How long to show the message
 
     void Start()
     {
@@ -15,6 +18,35 @@ public class ScreenshotManager : MonoBehaviour
         if (downloadButton != null)
         {
             downloadButton.onClick.AddListener(CaptureAndSaveScreenshot);
+        }
+
+        // Initialize success message text if assigned
+        if (successMessageText != null)
+        {
+            successMessageText.gameObject.SetActive(false);
+        }
+        else
+        {
+            Debug.LogWarning("Success message TMP_Text not assigned in ScreenshotManager!");
+        }
+    }
+
+    private void ShowSuccessMessage(string message)
+    {
+        if (successMessageText != null)
+        {
+            successMessageText.text = message;
+            successMessageText.gameObject.SetActive(true);
+            StartCoroutine(HideMessageAfterDelay());
+        }
+    }
+
+    private IEnumerator HideMessageAfterDelay()
+    {
+        yield return new WaitForSeconds(messageDisplayTime);
+        if (successMessageText != null)
+        {
+            successMessageText.gameObject.SetActive(false);
         }
     }
 
@@ -55,6 +87,7 @@ public class ScreenshotManager : MonoBehaviour
 
             // Show success message
             Debug.Log($"Screenshot saved to: {fullPath}");
+            ShowSuccessMessage("Screenshot saved successfully!");
 
             // On iOS, make the image available in the photo gallery
 #if UNITY_IOS
@@ -74,6 +107,7 @@ public class ScreenshotManager : MonoBehaviour
         catch (Exception e)
         {
             Debug.LogError($"Failed to save screenshot: {e.Message}");
+            ShowSuccessMessage("Failed to save screenshot!");
         }
     }
 }

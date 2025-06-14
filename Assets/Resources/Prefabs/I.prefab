@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 6878381108838200583}
   - component: {fileID: -8111206501180310159}
   - component: {fileID: -2989149707959391449}
-  m_Layer: 3
+  m_Layer: 6
   m_Name: I
   m_TagString: PlacedObject
   m_Icon: {fileID: 0}
@@ -30,13 +30,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1167118527451408757}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0.737631, z: 0, w: 0.6752041}
   m_LocalPosition: {x: 650.75336, y: 77.36884, z: 461.34714}
   m_LocalScale: {x: 6, y: 6, z: 6}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 95.06, z: 0}
 --- !u!33 &6192251021623992246
 MeshFilter:
   m_ObjectHideFlags: 0

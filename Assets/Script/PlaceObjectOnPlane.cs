@@ -14,6 +14,7 @@ public class PlaceObjectOnPlane : MonoBehaviour
 
     [SerializeField] ObjectGrabber objectGrabber; // Reference to the ObjectGrabber
     [SerializeField] Canvas uiCanvas; // Reference to the UI Canvas
+    [SerializeField] AudioClip placeSound;
 
     ARRaycastManager raycaster;
     List<ARRaycastHit> hits = new List<ARRaycastHit>();
@@ -28,9 +29,18 @@ public class PlaceObjectOnPlane : MonoBehaviour
     // Track the current index in the sequence
     private int currentPrefabIndex = 0;
 
+    private AudioSource audioSource;
+
+    // Static members to track placed objects and notify listeners
+    public static int placedObjectCount = 0;
+    public static event System.Action OnObjectPlaced;
+
     private void Start()
     {
         raycaster = GetComponent<ARRaycastManager>();
+
+        // Reset placed object count at the start of the scene
+        placedObjectCount = 0;
 
         // Find ObjectGrabber if not assigned
         if (objectGrabber == null)
@@ -55,6 +65,23 @@ public class PlaceObjectOnPlane : MonoBehaviour
 
         // Load all prefabs from the Prefab folder
         LoadPrefabs();
+
+        // Initialize audio source
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+            Debug.Log("Added AudioSource component to " + gameObject.name);
+        }
+
+        if (placeSound == null)
+        {
+            Debug.LogError("Place sound effect is not assigned in the inspector!");
+        }
+        else
+        {
+            Debug.Log("Place sound effect is properly assigned: " + placeSound.name);
+        }
     }
 
     private void LoadPrefabs()
@@ -103,7 +130,7 @@ public class PlaceObjectOnPlane : MonoBehaviour
         }
 
         // Don't allow placement if we're holding an object
-        if (!allowPlacement || (objectGrabber != null && objectGrabber.IsHolding()))
+        if (!allowPlacement || (objectGrabber != null && objectGrabber.IsHolding))
         {
             Debug.Log("Cannot place object while holding one.");
             return;
@@ -137,9 +164,30 @@ public class PlaceObjectOnPlane : MonoBehaviour
             if (prefabs != null && prefabs.Length > 0)
             {
                 GameObject selectedPrefab = prefabs[currentPrefabIndex];
-                GameObject newObject = Instantiate(selectedPrefab, stackPos, hitPose.rotation);
+
+                // Get camera position on the same y as the object
+                Vector3 cameraPosition = Camera.main.transform.position;
+                cameraPosition.y = hitPose.position.y;
+                Quaternion lookRotation = Quaternion.LookRotation(cameraPosition - hitPose.position);
+
+                GameObject newObject = Instantiate(selectedPrefab, stackPos, lookRotation);
                 lastPlaceTime = Time.time;
                 Debug.Log($"Placed prefab: {selectedPrefab.name}");
+
+                // Increment placed object count and invoke event
+                placedObjectCount++;
+                OnObjectPlaced?.Invoke();
+
+                // Play sound effect
+                if (placeSound != null && audioSource != null)
+                {
+                    audioSource.PlayOneShot(placeSound);
+                    Debug.Log("Playing place sound effect");
+                }
+                else
+                {
+                    Debug.LogWarning("Could not play sound effect - AudioSource or PlaceSound is null");
+                }
 
                 // Move to next prefab in sequence
                 currentPrefabIndex = (currentPrefabIndex + 1) % prefabs.Length;

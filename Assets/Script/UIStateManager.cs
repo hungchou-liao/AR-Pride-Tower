@@ -59,7 +59,7 @@ public class UIStateManager : MonoBehaviour
                 placeObjectScript.allowPlacement = false;
             }
 
-            grabber.Grab();
+            grabber.OnGrabButtonPressed();
             grabButton.SetActive(false);
             dropButton.SetActive(true);
 
@@ -71,7 +71,7 @@ public class UIStateManager : MonoBehaviour
     private IEnumerator CheckGrabResult()
     {
         yield return new WaitForSeconds(0.1f);
-        if (grabber != null && !grabber.IsHolding() && placeObjectScript != null)
+        if (grabber != null && !grabber.IsHolding && placeObjectScript != null)
         {
             placeObjectScript.allowPlacement = true;
         }
@@ -87,7 +87,7 @@ public class UIStateManager : MonoBehaviour
                 placeObjectScript.allowPlacement = false;
             }
 
-            grabber.Drop();
+            grabber.OnDropButtonPressed();
             grabButton.SetActive(true);
             dropButton.SetActive(false);
 

@@ -4,8 +4,9 @@ MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
-  - placedPrefab: {fileID: 1167118527451408757, guid: 9ac21ce2514b74be7ac619d3050b43ec,
-      type: 3}
+  - objectGrabber: {instanceID: 0}
+  - uiCanvas: {instanceID: 0}
+  - placeSound: {fileID: 8300000, guid: 619d317f33c78457eb80c4eef1457f84, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

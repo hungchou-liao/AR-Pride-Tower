@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class ObjectDetector : MonoBehaviour
 {
-    public float detectionDistance = 0.08f; // Much smaller detection range
+    public float detectionDistance = 1.0f;
     public Material highlightMaterial;
     private Material originalMaterial;
     private Renderer objRenderer;
-    private static GameObject closestObject;
+    public static GameObject closestObject;
     private static float minDistance = float.MaxValue;
     private static Transform arCamera;
     private static bool isObjectInView = false;
@@ -26,14 +26,27 @@ public class ObjectDetector : MonoBehaviour
         {
             originalMaterial = objRenderer.material;
         }
+        else
+        {
+            Debug.LogError($"ObjectDetector on {gameObject.name}: No Renderer component found!");
+        }
 
-        // Calculate the dead zone height (1/6 of screen height)
+        if (highlightMaterial == null)
+        {
+            Debug.LogError($"ObjectDetector on {gameObject.name}: Highlight Material is not assigned!");
+        }
+
+        if (!gameObject.CompareTag("PlacedObject"))
+        {
+            Debug.LogError($"ObjectDetector on {gameObject.name}: Object does not have 'PlacedObject' tag!");
+        }
+
         deadZoneHeight = Screen.height / 6f;
     }
 
     void Update()
     {
-        // Reset static variables at the start of each frame
+        // Reset static variables at the start of each frame IF THIS IS THE CLOSEST OBJECT
         if (gameObject == closestObject)
         {
             closestObject = null;
@@ -41,31 +54,20 @@ public class ObjectDetector : MonoBehaviour
             isObjectInView = false;
         }
 
-        // Check if object is in view
         Vector3 directionToCamera = arCamera.position - transform.position;
-        float angleToCamera = Vector3.Angle(directionToCamera, -transform.forward);
-        bool inFieldOfView = angleToCamera < 90f;
-
-        // Check if object is in screen dead zone
-        bool inDeadZone = false;
-        if (inFieldOfView)
-        {
-            Vector3 screenPoint = Camera.main.WorldToScreenPoint(transform.position);
-            inDeadZone = screenPoint.y <= deadZoneHeight;
-        }
-
-        // Calculate distance to camera
         float distance = Vector3.Distance(arCamera.position, transform.position);
 
-        // Only consider objects within detection range, in view, and not in dead zone
-        if (distance <= detectionDistance && inFieldOfView && !inDeadZone)
+        // Simplified detection - only check distance and dead zone
+        bool inDeadZone = false;
+        Vector3 screenPoint = Camera.main.WorldToScreenPoint(transform.position);
+        inDeadZone = screenPoint.y <= deadZoneHeight;
+
+        if (distance <= detectionDistance && !inDeadZone)
         {
-            // Update closest object if this one is closer
             if (distance < minDistance)
             {
                 if (closestObject != null && closestObject != gameObject)
                 {
-                    // Reset previous closest object's material
                     var prevRenderer = closestObject.GetComponent<Renderer>();
                     var prevDetector = closestObject.GetComponent<ObjectDetector>();
                     if (prevRenderer != null && prevDetector != null)
@@ -77,10 +79,10 @@ public class ObjectDetector : MonoBehaviour
                 minDistance = distance;
                 closestObject = gameObject;
                 isObjectInView = true;
+                Debug.Log($"Detected object: {gameObject.name} at distance: {distance}");
             }
         }
 
-        // Update material based on whether this is the closest object
         if (objRenderer != null)
         {
             if (gameObject == closestObject && isObjectInView)
@@ -96,13 +98,11 @@ public class ObjectDetector : MonoBehaviour
 
     void OnDisable()
     {
-        // Reset material when object is disabled
         if (objRenderer != null)
         {
             objRenderer.material = originalMaterial;
         }
 
-        // Reset static variables if this was the closest object
         if (gameObject == closestObject)
         {
             closestObject = null;
@@ -116,7 +116,6 @@ public class ObjectDetector : MonoBehaviour
         return gameObject == closestObject && isObjectInView;
     }
 
-    // Static method to check if an object is currently detected
     public static bool IsObjectDetected(GameObject obj)
     {
         return obj == closestObject && isObjectInView;
