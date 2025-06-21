@@ -93,6 +93,7 @@ public class ObjectDetector : MonoBehaviour
                     if (prevRenderer != null && prevDetector != null)
                     {
                         prevRenderer.material = prevDetector.originalMaterial;
+                        Debug.Log($"[{closestObject.name}] Reverted to original material: {prevDetector.originalMaterial.name}");
                     }
                 }
 
@@ -111,11 +112,19 @@ public class ObjectDetector : MonoBehaviour
         {
             if (gameObject == closestObject && isObjectInView)
             {
-                objRenderer.material = highlightMaterial;
+                if (objRenderer.material != highlightMaterial)
+                {
+                    Debug.Log($"[{gameObject.name}] Changing to highlight material: {highlightMaterial.name}");
+                    objRenderer.material = highlightMaterial;
+                }
             }
             else
             {
-                objRenderer.material = originalMaterial;
+                if (objRenderer.material != originalMaterial)
+                {
+                    Debug.Log($"[{gameObject.name}] Reverting to original material: {originalMaterial.name}");
+                    objRenderer.material = originalMaterial;
+                }
             }
         }
     }
