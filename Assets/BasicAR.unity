@@ -576,8 +576,9 @@ MonoBehaviour:
   allowPlacement: 1
   objectGrabber: {fileID: 424244821}
   uiCanvas: {fileID: 1981314744}
-  placeSound: {fileID: 8300000, guid: 619d317f33c78457eb80c4eef1457f84, type: 3}
+  jumpSound: {fileID: 8300000, guid: 2d68a7a21b77a4845904b38fc1d4fb0c, type: 3}
   placementCooldown: 0.8
+  launchSpeed: 2
 --- !u!1 &362657566
 GameObject:
   m_ObjectHideFlags: 0

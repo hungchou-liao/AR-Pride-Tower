@@ -14,7 +14,7 @@ public class PlaceObjectOnPlane : MonoBehaviour
 
     [SerializeField] ObjectGrabber objectGrabber; // Reference to the ObjectGrabber
     [SerializeField] Canvas uiCanvas; // Reference to the UI Canvas
-    [SerializeField] AudioClip placeSound;
+    [SerializeField] AudioClip jumpSound;
 
     ARRaycastManager raycaster;
     List<ARRaycastHit> hits = new List<ARRaycastHit>();
@@ -35,8 +35,12 @@ public class PlaceObjectOnPlane : MonoBehaviour
     public static int placedObjectCount = 0;
     public static event System.Action OnObjectPlaced;
 
+    private Camera mainCamera;
+    public float launchSpeed;
+
     private void Start()
     {
+        mainCamera = Camera.main;
         raycaster = GetComponent<ARRaycastManager>();
 
         // Reset placed object count at the start of the scene
@@ -90,24 +94,19 @@ public class PlaceObjectOnPlane : MonoBehaviour
             Debug.Log($"- Spatial Blend: {audioSource.spatialBlend}");
         }
 
-        if (placeSound == null)
+        if (jumpSound == null)
         {
             Debug.LogError("Place sound effect is not assigned in the inspector!");
         }
         else
         {
-            Debug.Log($"Place sound effect is properly assigned: {placeSound.name}");
-            Debug.Log($"- Load Type: {placeSound.loadType}");
-            Debug.Log($"- Load State: {placeSound.loadState}");
-            Debug.Log($"- Length: {placeSound.length} seconds");
+            Debug.Log($"Place sound effect is properly assigned: {jumpSound.name}");
+            Debug.Log($"- Load Type: {jumpSound.loadType}");
+            Debug.Log($"- Load State: {jumpSound.loadState}");
+            Debug.Log($"- Length: {jumpSound.length} seconds");
         }
 
-        // Test audio system
-        if (audioSource != null && placeSound != null)
-        {
-            Debug.Log("Testing audio system...");
-            audioSource.PlayOneShot(placeSound);
-        }
+
     }
 
     private void LoadPrefabs()
@@ -179,7 +178,33 @@ public class PlaceObjectOnPlane : MonoBehaviour
 
         Debug.Log("Tapped screen at: " + touchPosition);
 
-        if (raycaster.Raycast(touchPosition, hits, TrackableType.PlaneWithinPolygon))
+        int layerMask = 1 << LayerMask.NameToLayer("PlacedObject");
+        Ray ray = mainCamera.ScreenPointToRay(touchPosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))//found placedobject to tap
+        {
+            //Destroy(hit.collider.gameObject);
+            Rigidbody rb = hit.collider.gameObject.GetComponent<Rigidbody>();
+            rb.velocity = Vector3.up * launchSpeed;
+
+            // Play sound effect
+            if (jumpSound != null && audioSource != null)
+            {
+                Debug.Log($"Attempting to play sound: {jumpSound.name}");
+                Debug.Log($"- AudioSource enabled: {audioSource.enabled}");
+                Debug.Log($"- AudioSource playing: {audioSource.isPlaying}");
+                Debug.Log($"- AudioListener enabled: {AudioListener.pause == false}");
+
+                audioSource.PlayOneShot(jumpSound);
+                Debug.Log("PlayOneShot called");
+            }
+            else
+            {
+                Debug.LogWarning("Could not play sound effect - AudioSource or PlaceSound is null");
+            }
+        }
+
+        else if (raycaster.Raycast(touchPosition, hits, TrackableType.PlaneWithinPolygon))
         {
             Pose hitPose = hits[0].pose;
             Debug.Log("Plane hit at: " + hitPose.position);
@@ -192,7 +217,7 @@ public class PlaceObjectOnPlane : MonoBehaviour
                 GameObject selectedPrefab = prefabs[currentPrefabIndex];
 
                 // Get camera position on the same y as the object
-                Vector3 cameraPosition = Camera.main.transform.position;
+                Vector3 cameraPosition = mainCamera.transform.position;
                 cameraPosition.y = hitPose.position.y;
                 Quaternion lookRotation = Quaternion.LookRotation(cameraPosition - hitPose.position);
 
@@ -204,21 +229,6 @@ public class PlaceObjectOnPlane : MonoBehaviour
                 placedObjectCount++;
                 OnObjectPlaced?.Invoke();
 
-                // Play sound effect
-                if (placeSound != null && audioSource != null)
-                {
-                    Debug.Log($"Attempting to play sound: {placeSound.name}");
-                    Debug.Log($"- AudioSource enabled: {audioSource.enabled}");
-                    Debug.Log($"- AudioSource playing: {audioSource.isPlaying}");
-                    Debug.Log($"- AudioListener enabled: {AudioListener.pause == false}");
-
-                    audioSource.PlayOneShot(placeSound);
-                    Debug.Log("PlayOneShot called");
-                }
-                else
-                {
-                    Debug.LogWarning("Could not play sound effect - AudioSource or PlaceSound is null");
-                }
 
                 // Move to next prefab in sequence
                 currentPrefabIndex = (currentPrefabIndex + 1) % prefabs.Length;

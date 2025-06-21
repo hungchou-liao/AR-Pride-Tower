@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: -8111206501180310159}
   - component: {fileID: -2989149707959391449}
   - component: {fileID: -3777693050208918530}
+  - component: {fileID: -3837910190204809523}
   m_Layer: 6
   m_Name: P
   m_TagString: PlacedObject
@@ -258,3 +259,16 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-3837910190204809523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1167118527451408757}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afa3df5c0416c4ced9e1d49288682d46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  placementSound: {fileID: 8300000, guid: 619d317f33c78457eb80c4eef1457f84, type: 3}
